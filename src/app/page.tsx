@@ -6,8 +6,7 @@ import AmbientBackground from "@/components/AmbientBackground";
 
 import OpeningStory from "@/components/OpeningStory";
 
-import LoveLetter from "@/components/LoveLetter";
-import MemoryTimeline from "@/components/MemoryTimeline";
+
 import BirthdayConfession from "@/components/BirthdayConfession";
 import ProposalSection from "@/components/ProposalSection";
 import SecretInteractions from "@/components/SecretInteractions";
@@ -20,7 +19,7 @@ export default function Home() {
 
   const handleContinueStory = () => {
     setAutoPlayAudio(true);
-    const nextEl = document.getElementById("love-letter");
+    const nextEl = document.getElementById("birthday-confession");
     if (nextEl) {
       nextEl.scrollIntoView({ behavior: "smooth" });
     }
@@ -51,8 +50,7 @@ export default function Home() {
         <div className="relative z-10 space-y-16 sm:space-y-24">
           <OpeningStory onContinue={handleContinueStory} />
 
-          <LoveLetter />
-          <MemoryTimeline />
+
           <BirthdayConfession />
           <ProposalSection onProposalTriggered={handleProposalTrigger} />
           <Footer />

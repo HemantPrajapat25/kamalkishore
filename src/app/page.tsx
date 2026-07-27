@@ -5,7 +5,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import AmbientBackground from "@/components/AmbientBackground";
 
 import OpeningStory from "@/components/OpeningStory";
-import PolaroidGallery from "@/components/PolaroidGallery";
+
 import LoveLetter from "@/components/LoveLetter";
 import MemoryTimeline from "@/components/MemoryTimeline";
 import BirthdayConfession from "@/components/BirthdayConfession";
@@ -20,9 +20,9 @@ export default function Home() {
 
   const handleContinueStory = () => {
     setAutoPlayAudio(true);
-    const polaroidEl = document.getElementById("polaroid-memories");
-    if (polaroidEl) {
-      polaroidEl.scrollIntoView({ behavior: "smooth" });
+    const nextEl = document.getElementById("love-letter");
+    if (nextEl) {
+      nextEl.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -50,7 +50,7 @@ export default function Home() {
       {!isLoading && (
         <div className="relative z-10 space-y-16 sm:space-y-24">
           <OpeningStory onContinue={handleContinueStory} />
-          <PolaroidGallery />
+
           <LoveLetter />
           <MemoryTimeline />
           <BirthdayConfession />

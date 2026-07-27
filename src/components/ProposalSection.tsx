@@ -10,7 +10,7 @@ interface ProposalSectionProps {
 }
 
 const NO_PROMPTS = [
-  { main: "Will You Be My Girlfriend? ❤️", sub: "— Kamal" },
+  { main: "Will You accept my rose? ❤️", sub: "— Kamal" },
   { main: "Baby Man jao na! 😭", sub: "Kitna bhav khaogi... Bhut gili bawt hai yaar ❌" },
   { main: "Please think again! 🥺", sub: "itni jaldi na matt bolo 🥺" },
   { main: "Ek aur baar Soch lo! 😫", sub: "kyu aisa kar rahi ho Plzzz Man jao 🥺" },

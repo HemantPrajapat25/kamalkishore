@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import LoadingScreen from "@/components/LoadingScreen";
 import AmbientBackground from "@/components/AmbientBackground";
-import AudioPlayer from "@/components/AudioPlayer";
+
 import OpeningStory from "@/components/OpeningStory";
 import PolaroidGallery from "@/components/PolaroidGallery";
 import LoveLetter from "@/components/LoveLetter";
@@ -41,11 +41,7 @@ export default function Home() {
       {/* 2. Scroll-Driven Ambient Backdrop & Canvas Particles */}
       <AmbientBackground />
 
-      {/* 3. Floating Audio Player */}
-      <AudioPlayer
-        autoPlayTriggered={autoPlayAudio}
-        onVolumeBoost={boostVolume}
-      />
+
 
       {/* 4. Secret Interactive Floating Easter Eggs */}
       {!isLoading && <SecretInteractions />}

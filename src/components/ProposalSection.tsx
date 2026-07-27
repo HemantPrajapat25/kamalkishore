@@ -9,14 +9,27 @@ interface ProposalSectionProps {
   onProposalTriggered?: () => void;
 }
 
+const NO_PROMPTS = [
+  { main: "Will You Be My Girlfriend? ❤️", sub: "— Kamal" },
+  { main: "Baby Man jao na! 😭", sub: "Kitna bhav khaogi... Bhut gili bawt hai yaar ❌" },
+  { main: "Please think again! 🥺", sub: "itni jaldi na matt bolo 🥺" },
+  { main: "Ek aur baar Soch lo! 😫", sub: "kyu aisa kar rahi ho Plzzz Man jao 🥺" },
+  { main: "Maan jao na please... 🥺", sub: "Don't do this to me! 💔" },
+  { main: "You are breaking my heart... 💔", sub: "Just say YES! 😭" },
+];
+
 export default function ProposalSection({ onProposalTriggered }: ProposalSectionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isAccepted, setIsAccepted] = useState(false);
+  const [noCount, setNoCount] = useState(0);
+  const [noButtonPos, setNoButtonPos] = useState({ x: 0, y: 0 });
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // Trigger Heart Open & Celebration
   const handleOpenHeart = () => {
     setIsOpen(true);
+    setNoCount(0);
+    setNoButtonPos({ x: 0, y: 0 });
     if (onProposalTriggered) onProposalTriggered();
 
     // Trigger Initial Confetti Burst
@@ -46,6 +59,17 @@ export default function ProposalSection({ onProposalTriggered }: ProposalSection
       origin: { y: 0.6 },
       colors: ["#f472b6", "#ec4899", "#f59e0b", "#ffffff", "#c084fc"],
     });
+  };
+
+  const handleNoInteraction = () => {
+    setNoCount((prev) => prev + 1);
+    
+    // Calculate random position for the "No" button to dodge
+    const maxJump = 150;
+    const newX = (Math.random() - 0.5) * maxJump * 2;
+    const newY = (Math.random() - 0.5) * maxJump * 2;
+    
+    setNoButtonPos({ x: newX, y: newY });
   };
 
   // Canvas Fireworks & Star Explosion in Modal
@@ -148,8 +172,10 @@ export default function ProposalSection({ onProposalTriggered }: ProposalSection
     };
   }, [isOpen, isAccepted]);
 
+  const currentPrompt = NO_PROMPTS[Math.min(noCount, NO_PROMPTS.length - 1)];
+
   return (
-    <section id="proposal" className="relative py-24 px-4 text-center">
+    <section id="proposal" className="relative py-24 px-4 text-center overflow-hidden">
       {/* Large Glowing Heart Trigger Container */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
@@ -197,7 +223,7 @@ export default function ProposalSection({ onProposalTriggered }: ProposalSection
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#090314]/90 backdrop-blur-2xl overflow-hidden"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#090314]/90 backdrop-blur-2xl overflow-hidden"
           >
             {/* Fireworks Canvas */}
             <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" />
@@ -211,12 +237,12 @@ export default function ProposalSection({ onProposalTriggered }: ProposalSection
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.8, y: 50, opacity: 0 }}
               transition={{ type: "spring", stiffness: 200, damping: 22 }}
-              className="relative z-10 glass-card rounded-3xl p-8 sm:p-14 max-w-xl w-full border border-rose-300/40 shadow-[0_30px_90px_rgba(236,72,153,0.5)] text-center space-y-6 bg-[#16072C]/95 backdrop-blur-2xl"
+              className="relative z-10 glass-card rounded-3xl p-8 sm:p-12 max-w-xl w-full border border-rose-300/40 shadow-[0_30px_90px_rgba(236,72,153,0.5)] text-center space-y-6 bg-[#16072C]/95 backdrop-blur-2xl"
             >
               {/* Close Button */}
               <button
                 onClick={() => setIsOpen(false)}
-                className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center border border-white/20 transition-all"
+                className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center border border-white/20 transition-all z-20"
                 aria-label="Close Proposal Modal"
               >
                 <X className="w-5 h-5" />
@@ -228,40 +254,63 @@ export default function ProposalSection({ onProposalTriggered }: ProposalSection
                   <motion.div
                     animate={{ scale: [1, 1.25, 1] }}
                     transition={{ duration: 1.5, repeat: Infinity }}
-                    className="inline-flex p-4 rounded-full bg-gradient-to-tr from-rose-500 to-amber-400 text-white shadow-2xl"
+                    className="inline-flex p-4 rounded-full bg-gradient-to-tr from-rose-500 to-amber-400 text-white shadow-2xl mt-4"
                   >
                     <Heart className="w-14 h-14 fill-white text-white drop-shadow-xl" />
                   </motion.div>
 
-                  <div className="space-y-4">
-                    <h2 className="text-4xl sm:text-6xl font-serif-luxury font-bold text-gradient-rose drop-shadow-lg leading-tight">
-                      Will You Be My Girlfriend? ❤️
-                    </h2>
+                  <div className="space-y-3 min-h-[120px] flex flex-col justify-center">
+                    <motion.h2 
+                      key={currentPrompt.main}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-3xl sm:text-5xl font-serif-luxury font-bold text-gradient-rose drop-shadow-lg leading-tight"
+                    >
+                      {currentPrompt.main}
+                    </motion.h2>
 
-                    <div className="pt-2">
-                      <span className="font-handwriting text-3xl text-amber-300">
-                        — Kamal
+                    <motion.div 
+                      key={currentPrompt.sub}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="pt-2"
+                    >
+                      <span className={`font-handwriting text-2xl ${noCount === 0 ? 'text-amber-300' : 'text-rose-200'}`}>
+                        {currentPrompt.sub}
                       </span>
-                    </div>
+                    </motion.div>
                   </div>
 
                   {/* Interactive Response Buttons */}
-                  <div className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <button
+                  <div className="pt-8 pb-4 flex items-center justify-center gap-6 relative h-24">
+                    {/* YES BUTTON - Grows bigger with each NO click */}
+                    <motion.button
                       onClick={handleAcceptProposal}
-                      className="glass-button w-full sm:w-auto px-8 py-4 rounded-full text-white font-sans-modern font-bold text-lg flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(236,72,153,0.6)] cursor-pointer hover:scale-105 transition-transform"
+                      animate={{ 
+                        scale: 1 + (noCount * 0.15) 
+                      }}
+                      className="glass-button px-10 py-4 rounded-full text-white font-sans-modern font-bold text-xl flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(236,72,153,0.6)] cursor-pointer hover:scale-110 transition-colors z-20 bg-rose-500 hover:bg-rose-400"
                     >
-                      <Heart className="w-5 h-5 fill-white" />
                       <span>YES! ❤️</span>
-                    </button>
+                    </motion.button>
 
-                    <button
-                      onClick={handleAcceptProposal}
-                      className="glass-button-gold w-full sm:w-auto px-8 py-4 rounded-full text-white font-sans-modern font-bold text-lg flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(245,158,11,0.6)] cursor-pointer hover:scale-105 transition-transform"
+                    {/* NO BUTTON - Dodges cursor */}
+                    <motion.button
+                      onMouseEnter={handleNoInteraction}
+                      onClick={handleNoInteraction}
+                      animate={{
+                        x: noButtonPos.x,
+                        y: noButtonPos.y,
+                      }}
+                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                      className="glass-button px-8 py-4 rounded-full text-white/80 font-sans-modern font-bold text-lg flex items-center justify-center shadow-none cursor-pointer hover:bg-white/10 z-10 absolute right-0 sm:right-12"
+                      style={{ 
+                        left: noCount === 0 ? 'auto' : `calc(50% + ${noButtonPos.x}px)`,
+                        top: noCount === 0 ? 'auto' : `calc(50% + ${noButtonPos.y}px)`
+                      }}
                     >
-                      <PartyPopper className="w-5 h-5" />
-                      <span>A thousand times YES! 💖</span>
-                    </button>
+                      <span>No 🥺</span>
+                    </motion.button>
                   </div>
                 </>
               ) : (
@@ -270,7 +319,7 @@ export default function ProposalSection({ onProposalTriggered }: ProposalSection
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.6 }}
-                  className="space-y-6"
+                  className="space-y-6 py-6"
                 >
                   <div className="inline-flex p-4 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500 text-white shadow-2xl animate-bounce">
                     <Sparkles className="w-14 h-14 text-white" />
@@ -286,12 +335,12 @@ export default function ProposalSection({ onProposalTriggered }: ProposalSection
                     <p className="text-xs uppercase font-sans-modern tracking-widest text-rose-300">
                       Forever Yours,
                     </p>
-                    <h3 className="font-handwriting text-4xl text-amber-300">
+                    <h3 className="font-handwriting text-5xl text-amber-300 mt-2">
                       Kamal ❤️
                     </h3>
                   </div>
 
-                  <div className="flex items-center justify-center gap-2 text-xs text-rose-200/80 pt-2 font-sans-modern">
+                  <div className="flex items-center justify-center gap-2 text-xs text-rose-200/80 pt-4 font-sans-modern">
                     <Flame className="w-4 h-4 text-amber-300" />
                     <span>Our story begins now forever</span>
                     <Star className="w-4 h-4 text-amber-300 fill-amber-300" />
